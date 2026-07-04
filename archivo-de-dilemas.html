@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archivo de Dilemas · Bioética y Política</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14171A;
+    --bg-elevated:#1B1F23;
+    --bg-line: rgba(232,228,216,0.08);
+    --manila:#D6C7A1;
+    --manila-shadow:#BEA97B;
+    --manila-shadow-2:#A98F5F;
+    --paper-light:#EFE9D9;
+    --ink:#241C12;
+    --ink-soft:#5A4E3B;
+    --text-onbg:#E8E4D8;
+    --text-onbg-dim:#A9A69B;
+    --accent-navy:#24425B;
+    --accent-oxblood:#7A2E2E;
+    --accent-sage:#5C6E4F;
+    --accent-brass:#A8783A;
+    --accent-plum:#4B3F5E;
+    --accent-teal:#2E5C57;
+    --radius-card: 3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top, rgba(232,228,216,0.05), transparent 60%),
+      var(--bg);
+    color:var(--text-onbg);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  .room{
+    max-width:880px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    text-align:center;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--bg-line);
+    margin-bottom:32px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--accent-brass);
+    margin:0 0 14px;
+  }
+  .masthead h1{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:clamp(2.2rem, 5vw, 3.2rem);
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+  .subhead{
+    color:var(--text-onbg-dim);
+    max-width:560px;
+    margin:0 auto 24px;
+    font-size:0.98rem;
+  }
+  .ghost-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.05em;
+    background:transparent;
+    border:1px solid rgba(232,228,216,0.3);
+    color:var(--text-onbg);
+    padding:10px 18px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:border-color 0.2s ease, background 0.2s ease;
+  }
+  .ghost-btn:hover, .ghost-btn:focus-visible{
+    border-color:var(--accent-brass);
+    background:rgba(168,120,58,0.1);
+  }
+  .ghost-btn:focus-visible, button:focus-visible, .option:focus-visible{
+    outline:2px solid var(--accent-brass);
+    outline-offset:2px;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding:4px 0 18px;
+    margin-bottom:8px;
+    scrollbar-width:thin;
+  }
+  .tab{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--text-onbg-dim);
+    background:var(--bg-elevated);
+    border:1px solid rgba(232,228,216,0.12);
+    border-bottom:3px solid var(--tab-color, transparent);
+    padding:9px 14px;
+    border-radius:2px 2px 0 0;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:color 0.2s ease, background 0.2s ease;
+  }
+  .tab:hover{ color:var(--text-onbg); }
+  .tab.active{
+    color:var(--text-onbg);
+    background:#22262B;
+    border-bottom-width:3px;
+  }
+  .tab .count{
+    opacity:0.6;
+    margin-left:4px;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-onbg-dim);
+    text-align:right;
+    margin:-4px 0 14px;
+  }
+
+  /* ---------- Case file (signature element) ---------- */
+  .case-file{
+    background:var(--manila);
+    color:var(--ink);
+    border-radius:var(--radius-card);
+    box-shadow: 0 1px 0 var(--manila-shadow-2), 0 18px 40px -20px rgba(0,0,0,0.6);
+    position:relative;
+    padding:0 0 28px;
+    animation: rise 0.35s ease;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .tab-label{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    color:#F2EEE2;
+    background:var(--cat-color, var(--accent-navy));
+    padding:7px 16px;
+    border-radius:0 0 4px 0;
+    margin-bottom:0;
+  }
+  .case-title{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:1.7rem;
+    margin:22px 28px 4px;
+    color:var(--ink);
+  }
+  .case-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin:0 28px 18px;
+  }
+  .sheet{
+    background:var(--paper-light);
+    margin:0 28px 20px;
+    padding:18px 20px;
+    border-radius:2px;
+    border:1px solid rgba(36,28,18,0.08);
+    font-size:0.98rem;
+    color:var(--ink);
+  }
+  .sheet p{ margin:0; }
+  .prompt-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 28px 10px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin:0 28px 6px;
+  }
+  .option{
+    text-align:left;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.95rem;
+    color:var(--ink);
+    background:rgba(239,233,217,0.6);
+    border:1px solid rgba(36,28,18,0.18);
+    border-radius:2px;
+    padding:13px 16px;
+    cursor:pointer;
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover{
+    border-color: var(--ink-soft);
+    background:rgba(239,233,217,0.9);
+  }
+  .option:active{ transform:scale(0.995); }
+  .option.chosen{
+    border-color:var(--ink);
+    background:#fff8e8;
+    box-shadow: inset 3px 0 0 var(--cat-color, var(--accent-navy));
+  }
+  .option[disabled]{ cursor:default; }
+  .option .thinker-tag{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+
+  /* ---------- Verdict / reveal ---------- */
+  .verdict{
+    margin:20px 28px 0;
+    padding-top:18px;
+    border-top:1px dashed rgba(36,28,18,0.25);
+    animation: unfold 0.35s ease;
+  }
+  @keyframes unfold{
+    from{ opacity:0; transform:translateY(-6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .verdict-lead{
+    font-family:'Spectral', serif;
+    font-style:italic;
+    font-size:1.05rem;
+    margin:0 0 16px;
+  }
+  .thinkers-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:560px){ .thinkers-grid{ grid-template-columns:1fr; } }
+  .thinker-card{
+    background:rgba(239,233,217,0.55);
+    border:1px solid rgba(36,28,18,0.14);
+    border-radius:2px;
+    padding:12px 14px;
+  }
+  .thinker-card.match{
+    background:#fff8e8;
+    border-color:var(--ink);
+    box-shadow: inset 3px 0 0 var(--cat-color, var(--accent-navy));
+  }
+  .thinker-card h4{
+    margin:0 0 4px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .thinker-card h4 .stamp{
+    font-size:9px;
+    background:var(--ink);
+    color:var(--manila);
+    padding:2px 6px;
+    border-radius:8px;
+    letter-spacing:0.04em;
+  }
+  .thinker-card p{ margin:0; font-size:0.88rem; color:var(--ink-soft); }
+
+  /* ---------- Dial (spectrum, politica) ---------- */
+  .dial-wrap{ margin-top:18px; }
+  .dial-caption{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .dial{ position:relative; padding:14px 0 26px; }
+  .dial-track{
+    position:relative;
+    height:4px;
+    background: linear-gradient(90deg, var(--accent-navy), var(--manila-shadow-2) 50%, var(--accent-oxblood));
+    border-radius:2px;
+  }
+  .dial-tick{
+    position:absolute;
+    top:14px;
+    transform:translateX(-50%);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+  }
+  .dial-marker{
+    position:absolute;
+    top:-8px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--ink);
+    border:3px solid var(--manila);
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+    transform:translateX(-50%);
+    transition:left 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* ---------- Case actions ---------- */
+  .case-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:24px 28px 0;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .btn-primary{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    background:var(--ink);
+    color:var(--manila);
+    border:none;
+    padding:12px 18px;
+    border-radius:2px;
+    cursor:pointer;
+  }
+  .btn-primary:hover{ background:#3a2e1c; }
+  .link-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+  }
+
+  /* ---------- Profile panel ---------- */
+  .profile-panel{
+    background:var(--bg-elevated);
+    border:1px solid var(--bg-line);
+    border-radius:4px;
+    padding:26px 26px 20px;
+    margin-top:28px;
+    animation: rise 0.3s ease;
+  }
+  .profile-panel h2{
+    font-family:'Spectral', serif;
+    font-size:1.5rem;
+    margin:0 0 6px;
+  }
+  .profile-panel .sub{ color:var(--text-onbg-dim); font-size:0.9rem; margin:0 0 22px; }
+  .profile-block{ margin-bottom:26px; }
+  .profile-block h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--accent-brass);
+    margin:0 0 12px;
+  }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .bar-row .label{ width:110px; font-size:0.85rem; flex:0 0 auto; color:var(--text-onbg-dim); }
+  .bar-track{ flex:1; height:10px; background:rgba(232,228,216,0.08); border-radius:5px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:5px; transition:width 0.4s ease; }
+  .bar-row .val{ width:26px; text-align:right; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--text-onbg-dim); }
+  .empty-note{ color:var(--text-onbg-dim); font-size:0.88rem; font-style:italic; }
+  .profile-actions{ display:flex; gap:14px; margin-top:6px; }
+
+  /* ---------- Footer ---------- */
+  .colophon{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--bg-line);
+    font-size:0.8rem;
+    color:var(--text-onbg-dim);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="room">
+  <header class="masthead">
+    <p class="eyebrow">Un expediente a la vez</p>
+    <h1>Archivo de Dilemas</h1>
+    <p class="subhead">Casos de bioética, medicina y política. Elige tu postura ante cada expediente y descubre con qué pensador coincides — y en qué se separan Kant, Mill, Aristóteles, Hipócrates, Rawls, Nozick y Burke.</p>
+    <button class="ghost-btn" id="profileBtn" type="button">Ver mi perfil</button>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Categorías de casos"></nav>
+  <p class="progress-line" id="progressLine"></p>
+
+  <main id="stage"></main>
+
+  <section class="profile-panel" id="profilePanel" hidden></section>
+
+  <footer class="colophon">
+    <p>Simplificación con fines educativos. Las posturas filosóficas y el espectro izquierda–derecha son aproximaciones didácticas, no encasillamientos absolutos ni verdades cerradas.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+
+  const CATEGORIES = [
+    { key:'autonomia', label:'Autonomía del paciente', color:'var(--accent-navy)' },
+    { key:'justicia', label:'Justicia y recursos', color:'var(--accent-oxblood)' },
+    { key:'vida', label:'Inicio y fin de la vida', color:'var(--accent-sage)' },
+    { key:'investigacion', label:'Investigación', color:'var(--accent-brass)' },
+    { key:'confidencialidad', label:'Confidencialidad', color:'var(--accent-plum)' },
+    { key:'politica', label:'Política', color:'var(--accent-teal)' },
+  ];
+
+  const BIO_THINKERS = {
+    kant:{ name:'Kant', school:'Deontología' },
+    mill:{ name:'Mill', school:'Utilitarismo' },
+    aristoteles:{ name:'Aristóteles', school:'Ética de virtudes' },
+    hipocrates:{ name:'Tradición hipocrática', school:'Ética médica clásica' }
+  };
+  const POL_THINKERS = {
+    rawls:{ name:'Rawls', school:'Liberalismo igualitario', spectrum:-2 },
+    millc:{ name:'Mill (liberal clásico)', school:'Libertad individual', spectrum:-0.4 },
+    nozick:{ name:'Nozick', school:'Libertarismo', spectrum:1.6 },
+    burke:{ name:'Burke', school:'Conservadurismo tradicional', spectrum:1.7 }
+  };
+
+  const CASES = [
+    // ---------------- AUTONOMÍA ----------------
+    { id:'a1', category:'autonomia',
+      title:'La transfusión rechazada',
+      context:'Un paciente adulto, consciente y competente, ingresa con hemorragia grave. Es testigo de Jehová y rechaza expresamente cualquier transfusión de sangre, aunque comprende que sin ella podría morir. Su familia está dividida: unos apoyan su decisión, otros piden que el equipo médico actúe para salvarlo.',
+      options:[
+        { thinker:'kant', text:'Respetar la negativa: la autonomía del paciente competente es innegociable, incluso si el desenlace es la muerte.' },
+        { thinker:'mill', text:'Respetar la negativa, porque no perjudica a terceros; el principio de daño protege su libertad sobre su propio cuerpo.' },
+        { thinker:'aristoteles', text:'Buscar un término medio: agotar el diálogo y alternativas médicas antes de aceptar el desenlace.' },
+        { thinker:'hipocrates', text:'Priorizar la preservación de la vida y transfundir si existe una vía legal para hacerlo.' }
+      ],
+      notes:{
+        kant:'Para Kant, tratar al paciente como fin en sí mismo exige aceptar su decisión racional e informada, aunque el médico no la comparta.',
+        mill:'Mill defendería la libertad individual mientras la decisión no dañe a otros: el paciente es soberano sobre su propio cuerpo.',
+        aristoteles:'Aristóteles buscaría la prudencia práctica: explorar alternativas terapéuticas antes de resignarse a los extremos.',
+        hipocrates:'La tradición hipocrática pondría el énfasis en "no hacer daño" y en la obligación de preservar la vida siempre que sea posible.'
+      }
+    },
+    { id:'a2', category:'autonomia',
+      title:'El adolescente que rechaza la quimioterapia',
+      context:'Un chico de 16 años con leucemia, con buen pronóstico si recibe quimioterapia, se niega al tratamiento por miedo y por una convicción personal contra la medicina convencional. Sus padres quieren obligarlo; él pide que se respete su voz.',
+      options:[
+        { thinker:'kant', text:'Escuchar su voluntad, aunque reconociendo que a los 16 su autonomía plena aún está en formación legal y moral.' },
+        { thinker:'mill', text:'Dejarlo decidir si demuestra comprensión real de las consecuencias, tratándolo como capaz de gobernar su vida.' },
+        { thinker:'aristoteles', text:'Involucrar a un mediador o comité de ética para cultivar en él una decisión más madura, no solo respetarla o imponerla.' },
+        { thinker:'hipocrates', text:'Priorizar el tratamiento que preserva la vida, ya que su bienestar pesa más que un rechazo momentáneo.' }
+      ],
+      notes:{
+        kant:'Kant distinguiría entre autonomía plena y una voluntad aún en desarrollo, lo que complica aplicar el imperativo categórico sin matices.',
+        mill:'Mill valoraría la capacidad real de razonar del menor más que su edad cronológica al decidir cuánta libertad merece.',
+        aristoteles:'Aristóteles vería esto como una oportunidad de formación del carácter: ayudarlo a decidir bien, no solo dejarlo o forzarlo.',
+        hipocrates:'El juramento hipocrático inclinaría la balanza hacia preservar la vida, sobre todo con un pronóstico de curación alto.'
+      }
+    },
+    { id:'a3', category:'autonomia',
+      title:'Consentimiento informado y el diagnóstico oculto',
+      context:'Una paciente de edad avanzada tiene cáncer terminal. Su familia pide al médico que no le diga la verdad, temiendo que pierda las ganas de vivir. La paciente pregunta directamente: "¿qué tengo, doctor?".',
+      options:[
+        { thinker:'kant', text:'Decir la verdad: mentir la trata como un medio para el bienestar emocional de otros, no como fin en sí misma.' },
+        { thinker:'mill', text:'Decir la verdad si maximiza su bienestar a largo plazo, permitiéndole decidir cómo vivir el tiempo que le queda.' },
+        { thinker:'aristoteles', text:'Comunicar la verdad con tacto y gradualidad, cultivando la compasión sin caer en el engaño.' },
+        { thinker:'hipocrates', text:'Podría justificarse cierta reserva temporal si revelarla de golpe causara un daño psicológico mayor.' }
+      ],
+      notes:{
+        kant:'Para Kant, la mentira —incluso piadosa— viola el deber de veracidad y trata a la persona como instrumento del confort ajeno.',
+        mill:'Mill pesaría las consecuencias reales: ¿qué maximiza el bienestar de la paciente, saber o no saber?',
+        aristoteles:'Aristóteles buscaría el punto medio entre la brutalidad de la verdad cruda y la cobardía del engaño.',
+        hipocrates:'Algunas lecturas históricas del hipocratismo permitían dosificar la verdad si se creía que protegía al paciente del daño.'
+      }
+    },
+
+    // ---------------- JUSTICIA ----------------
+    { id:'j1', category:'justicia',
+      title:'El último respirador',
+      context:'Durante el pico de una enfermedad respiratoria, solo queda un respirador disponible. Dos pacientes lo necesitan: uno de 78 años con comorbilidades y una vida plena vivida, otro de 34 años, previamente sano, con dos hijos pequeños.',
+      options:[
+        { thinker:'kant', text:'Usar un criterio ciego a la edad: ambos son fines en sí mismos con igual dignidad, decidir por sorteo.' },
+        { thinker:'mill', text:'Priorizar a quien tenga mayor probabilidad de sobrevivir y más años de vida por ganar, maximizando el bienestar total.' },
+        { thinker:'aristoteles', text:'Que un comité delibere caso por caso, buscando la decisión más justa según el contexto, no una regla rígida.' },
+        { thinker:'hipocrates', text:'Tratar a quien llegó primero o cuya condición indique mayor urgencia clínica, sin juzgar el "valor" de cada vida.' }
+      ],
+      notes:{
+        kant:'Kant rechazaría comparar el "valor" de las personas; propondría un mecanismo imparcial como el azar para no instrumentalizar a nadie.',
+        mill:'Mill calcularía qué decisión produce más bienestar agregado, considerando probabilidad de éxito y años de vida ganados.',
+        aristoteles:'Aristóteles desconfiaría de reglas universales rígidas y confiaría en el juicio prudente ante cada caso concreto.',
+        hipocrates:'La ética médica clásica prioriza la urgencia clínica y el orden de llegada, evitando juicios sobre el valor de una vida.'
+      }
+    },
+    { id:'j2', category:'justicia',
+      title:'Lista de espera para trasplante',
+      context:'Dos pacientes esperan el mismo hígado compatible: uno con cirrosis por consumo previo de alcohol, sobrio hace tres años; otro con una enfermedad hepática congénita. El órgano solo alcanza para uno.',
+      options:[
+        { thinker:'kant', text:'Ignorar el origen de la enfermedad; juzgar el pasado de alguien para negarle tratamiento lo trata como menos digno.' },
+        { thinker:'mill', text:'Priorizar según probabilidad de éxito y años de vida saludable que se ganarían, sin importar la causa de la enfermedad.' },
+        { thinker:'aristoteles', text:'Valorar el cambio de carácter: la sobriedad sostenida demuestra una virtud recuperada que sí puede pesar.' },
+        { thinker:'hipocrates', text:'Tratar según criterio médico objetivo —compatibilidad, urgencia— dejando fuera cualquier juicio sobre el estilo de vida.' }
+      ],
+      notes:{
+        kant:'Kant advertiría contra castigar retroactivamente a alguien por su pasado al negarle un trato igual de digno hoy.',
+        mill:'Mill se enfocaría en el resultado esperado: qué trasplante produce más beneficio neto en salud y años de vida.',
+        aristoteles:'Aristóteles sí consideraría el carácter demostrado con el tiempo, pues la virtud se cultiva y el cambio puede reconocerse.',
+        hipocrates:'La tradición médica insiste en tratar según necesidad y compatibilidad clínica, no según el mérito moral del paciente.'
+      }
+    },
+    { id:'j3', category:'justicia',
+      title:'Triaje en el pico de la pandemia',
+      context:'En una sala de urgencias colapsada, el protocolo de triaje debe decidir a quién atender primero: pacientes graves con alta probabilidad de recuperación, o pacientes menos graves pero con certeza de recuperación total.',
+      options:[
+        { thinker:'kant', text:'Atender por orden de gravedad clínica, sin calcular resultados agregados: cada vida merece el mismo esfuerzo inmediato.' },
+        { thinker:'mill', text:'Priorizar a quienes tengan mayor probabilidad de sobrevivir, salvando el mayor número de vidas posible.' },
+        { thinker:'aristoteles', text:'Formar equipos entrenados en juicio clínico prudente, capaces de ponderar cada caso más allá de un protocolo rígido.' },
+        { thinker:'hipocrates', text:'Atender según urgencia vital inmediata, priorizando a quien está en mayor riesgo de morir en las próximas horas.' }
+      ],
+      notes:{
+        kant:'Kant se resistiría a sacrificar el trato igualitario en nombre de la eficiencia agregada del sistema.',
+        mill:'Mill defendería un triaje utilitario clásico: salvar el mayor número de vidas con los recursos disponibles.',
+        aristoteles:'Aristóteles confiaría en profesionales con juicio clínico cultivado antes que en fórmulas mecánicas de priorización.',
+        hipocrates:'El criterio hipocrático clásico prioriza la urgencia vital inmediata sobre cálculos de probabilidad a futuro.'
+      }
+    },
+
+    // ---------------- INICIO Y FIN DE LA VIDA ----------------
+    { id:'v1', category:'vida',
+      title:'Soporte vital y muerte cerebral',
+      context:'Un paciente joven sufre muerte cerebral tras un accidente, pero su corazón sigue latiendo con soporte artificial. La familia se resiste a retirar el soporte, aferrándose a la esperanza de un milagro.',
+      options:[
+        { thinker:'kant', text:'Explicar que la muerte cerebral es, moral y legalmente, la muerte de la persona; mantener el soporte no honra su dignidad.' },
+        { thinker:'mill', text:'Retirar el soporte si prolonga sufrimiento familiar sin ningún beneficio real, liberando recursos para otros pacientes.' },
+        { thinker:'aristoteles', text:'Acompañar a la familia con paciencia hacia la aceptación, cultivando un buen proceso de duelo sin apresurar la decisión.' },
+        { thinker:'hipocrates', text:'Actuar con cautela: agotar toda verificación clínica de muerte cerebral antes de retirar cualquier soporte.' }
+      ],
+      notes:{
+        kant:'Kant separaría el respeto a la persona —que ya no existe como agente racional— de mantener funciones biológicas sin propósito.',
+        mill:'Mill evaluaría el sufrimiento prolongado de la familia y el uso de recursos escasos frente a un beneficio nulo para el paciente.',
+        aristoteles:'Aristóteles pondría el foco en acompañar bien el proceso humano de duelo, sin urgencia innecesaria ni prolongación vacía.',
+        hipocrates:'La prudencia hipocrática exige certeza diagnóstica absoluta antes de cualquier retiro de soporte vital.'
+      }
+    },
+    { id:'v2', category:'vida',
+      title:'Eutanasia y dolor irreversible',
+      context:'Un paciente con una enfermedad neurodegenerativa terminal, en pleno uso de sus facultades mentales, pide reiteradamente la eutanasia legal para terminar con un sufrimiento que solo empeorará.',
+      options:[
+        { thinker:'kant', text:'Respetar su decisión autónoma y racional, siempre que se verifique que es libre, informada y sostenida en el tiempo.' },
+        { thinker:'mill', text:'Permitirlo: su sufrimiento no daña a terceros, y prolongar su vida contra su voluntad reduce el bienestar general.' },
+        { thinker:'aristoteles', text:'Acompañar primero con cuidados paliativos integrales, buscando si existe una vida más plena posible antes de esa decisión.' },
+        { thinker:'hipocrates', text:'Oponerse, siguiendo la tradición del juramento que prohíbe históricamente administrar un fármaco letal.' }
+      ],
+      notes:{
+        kant:'Un kantiano defendería la autonomía del paciente racional, aunque algunos discuten si el suicidio asistido respeta o viola la dignidad.',
+        mill:'Mill priorizaría reducir el sufrimiento y respetar la libertad individual cuando no hay daño a terceros.',
+        aristoteles:'Aristóteles insistiría en explorar primero si existen condiciones para recuperar una vida con sentido.',
+        hipocrates:'El juramento hipocrático original contiene una prohibición histórica de proporcionar veneno letal, aun a petición del paciente.'
+      }
+    },
+    { id:'v3', category:'vida',
+      title:'Diagnóstico prenatal y decisión de continuar el embarazo',
+      context:'Un estudio prenatal revela una condición genética severa e incompatible con una vida prolongada. Los padres deben decidir si continúan el embarazo, en un contexto legal que lo permite.',
+      options:[
+        { thinker:'kant', text:'Respetar plenamente la decisión autónoma de los padres, informados con claridad y sin presión externa.' },
+        { thinker:'mill', text:'Apoyar la decisión que reduzca el sufrimiento esperado, tanto del futuro bebé como de la familia.' },
+        { thinker:'aristoteles', text:'Acompañar con consejería que ayude a los padres a decidir según sus propios valores, sin imponer una respuesta única.' },
+        { thinker:'hipocrates', text:'Enfocar el rol médico en dar toda la información clínica precisa, sin inclinar la balanza moral en ninguna dirección.' }
+      ],
+      notes:{
+        kant:'Kant defendería la autonomía reproductiva de los padres como agentes racionales capaces de decidir sobre su vida familiar.',
+        mill:'Mill evaluaría qué decisión produce menos sufrimiento neto para todos los involucrados, incluyendo al futuro niño.',
+        aristoteles:'Aristóteles vería esto como una decisión profundamente personal que requiere sabiduría práctica más que una regla general.',
+        hipocrates:'La ética médica clásica enfatiza la neutralidad informativa del médico, dejando la decisión moral fuera de su rol clínico.'
+      }
+    },
+
+    // ---------------- INVESTIGACIÓN ----------------
+    { id:'i1', category:'investigacion',
+      title:'Ensayo clínico con placebo',
+      context:'Se diseña un ensayo para una enfermedad grave sin cura conocida. Un grupo control recibirá placebo en lugar del fármaco experimental, aunque eso signifique que algunos pacientes no reciban tratamiento activo.',
+      options:[
+        { thinker:'kant', text:'Es aceptable solo si cada participante da consentimiento pleno, informado y libre sobre el riesgo real de recibir placebo.' },
+        { thinker:'mill', text:'Aceptable si el conocimiento generado beneficia a muchos más futuros pacientes que el costo para el grupo control.' },
+        { thinker:'aristoteles', text:'Diseñar el ensayo con la menor duración posible de exposición al placebo, equilibrando rigor científico y cuidado.' },
+        { thinker:'hipocrates', text:'Cuestionable: negar tratamiento activo a un paciente enfermo, aunque sea por ciencia, tensiona el deber de no hacer daño.' }
+      ],
+      notes:{
+        kant:'Kant exigiría que el consentimiento informado sea genuino, tratando a cada participante como agente racional, no como medio.',
+        mill:'Mill sopesaría el beneficio agregado a largo plazo para la humanidad frente al costo a corto plazo del grupo control.',
+        aristoteles:'Aristóteles buscaría un diseño experimental prudente que minimice el daño sin sacrificar el rigor necesario.',
+        hipocrates:'La tradición hipocrática pondría en tensión el deber de tratar al paciente frente al que produce conocimiento científico.'
+      }
+    },
+    { id:'i2', category:'investigacion',
+      title:'Edición genética embrionaria',
+      context:'Una nueva tecnología permite corregir mutaciones graves en embriones antes de la implantación, evitando enfermedades hereditarias. Algunos temen que la misma técnica abra la puerta a seleccionar rasgos no médicos.',
+      options:[
+        { thinker:'kant', text:'Permitir solo el uso terapéutico estricto: usar la técnica para "diseñar" rasgos trata al futuro hijo como un producto.' },
+        { thinker:'mill', text:'Permitir ampliamente si reduce el sufrimiento humano total, incluso si algunos usos avanzan hacia mejoras no médicas.' },
+        { thinker:'aristoteles', text:'Regular con prudencia gradual: permitir lo terapéutico ahora, observando con cautela cómo evoluciona la práctica.' },
+        { thinker:'hipocrates', text:'Aplicar el principio de precaución: intervenir solo cuando el beneficio médico es claro y el riesgo mínimo.' }
+      ],
+      notes:{
+        kant:'Kant distinguiría entre tratar una enfermedad y diseñar rasgos según deseos ajenos, que instrumentalizaría al futuro niño.',
+        mill:'Mill priorizaría el cálculo de sufrimiento evitado y bienestar generado, con menos reparos categóricos sobre los límites.',
+        aristoteles:'Aristóteles preferiría una expansión gradual y prudente, atenta a cómo cambia el carácter de la sociedad con cada paso.',
+        hipocrates:'La prudencia hipocrática recomendaría avanzar solo donde el beneficio clínico es certero, evitando riesgos especulativos.'
+      }
+    },
+    { id:'i3', category:'investigacion',
+      title:'Datos genéticos y terceros familiares',
+      context:'Un estudio genético revela que un paciente tiene alto riesgo de una enfermedad hereditaria grave, información que implica también riesgo directo para sus hermanos, quienes no han sido consultados.',
+      options:[
+        { thinker:'kant', text:'Respetar la confidencialidad del paciente ante todo; informar a terceros sin su consentimiento lo trataría solo como fuente de datos.' },
+        { thinker:'mill', text:'Buscar el consentimiento del paciente para avisar a sus hermanos: prevenir su enfermedad supera el costo de la revelación.' },
+        { thinker:'aristoteles', text:'Mediar apelando a la virtud de la generosidad familiar, para que el propio paciente decida compartir la información.' },
+        { thinker:'hipocrates', text:'Mantener el secreto médico estrictamente, salvo excepción legal explícita, como pilar de la confianza médico-paciente.' }
+      ],
+      notes:{
+        kant:'Kant defendería la confidencialidad como parte del respeto a la autonomía del paciente sobre su propia información.',
+        mill:'Mill pesaría el bienestar agregado: prevenir una enfermedad grave en los hermanos podría justificar romper la confidencialidad.',
+        aristoteles:'Aristóteles confiaría en cultivar la virtud del paciente para que comparta voluntariamente, en vez de imponer la revelación.',
+        hipocrates:'El secreto médico es uno de los pilares más antiguos del juramento hipocrático, y se rompe solo en casos excepcionales.'
+      }
+    },
+
+    // ---------------- CONFIDENCIALIDAD ----------------
+    { id:'c1', category:'confidencialidad',
+      title:'Enfermedad infecciosa y pareja no informada',
+      context:'Un paciente da positivo a una infección de transmisión sexual grave y se niega a informar a su pareja actual, con quien mantiene relaciones sin protección.',
+      options:[
+        { thinker:'kant', text:'Persuadir intensamente al paciente para que él mismo informe, respetando su autonomía hasta el límite de no dañar a un tercero identificable.' },
+        { thinker:'mill', text:'Informar directamente a la pareja si el paciente se niega: el daño evitado a un tercero pesa más que la confidencialidad.' },
+        { thinker:'aristoteles', text:'Buscar mediación con apoyo psicológico, cultivando en el paciente la responsabilidad de proteger a quien ama.' },
+        { thinker:'hipocrates', text:'Mantener el secreto salvo que la ley lo obligue expresamente a revelar, priorizando la confianza médico-paciente.' }
+      ],
+      notes:{
+        kant:'Kant enfrentaría un conflicto entre la autonomía del paciente y no dañar a un tercero identificable, inclinándose por proteger a la víctima potencial.',
+        mill:'Mill priorizaría claramente evitar el daño real y evitable a la pareja, incluso rompiendo la confidencialidad.',
+        aristoteles:'Aristóteles buscaría que el propio paciente actúe virtuosamente, mediando antes de imponer una revelación externa.',
+        hipocrates:'La tradición hipocrática valora enormemente el secreto médico, cediendo solo ante mandatos legales claros de reporte.'
+      }
+    },
+    { id:'c2', category:'confidencialidad',
+      title:'Historia clínica y empleador',
+      context:'El empleador de un paciente solicita acceso a su historia clínica para evaluar si puede seguir en un puesto de alto riesgo, alegando seguridad laboral. El paciente se niega a autorizarlo.',
+      options:[
+        { thinker:'kant', text:'Negar el acceso: la historia clínica pertenece a la esfera autónoma del paciente y no puede cederse sin su consentimiento explícito.' },
+        { thinker:'mill', text:'Evaluar si existe un riesgo real y grave para terceros en el puesto de trabajo antes de decidir sobre la confidencialidad.' },
+        { thinker:'aristoteles', text:'Proponer una evaluación médica laboral específica y limitada, sin exponer el historial completo, como solución prudente.' },
+        { thinker:'hipocrates', text:'Proteger el secreto médico como regla general, entregando solo la información mínima que la ley exija.' }
+      ],
+      notes:{
+        kant:'Kant defendería el control del paciente sobre su propia información como parte esencial de su autonomía.',
+        mill:'Mill consideraría el riesgo real para terceros en el entorno laboral antes de decidir si la confidencialidad debe ceder.',
+        aristoteles:'Aristóteles preferiría una solución intermedia y proporcional, en vez de una respuesta absoluta en cualquier dirección.',
+        hipocrates:'El secreto médico limita fuertemente la entrega de información a terceros, salvo excepciones legales puntuales.'
+      }
+    },
+
+    // ---------------- POLÍTICA ----------------
+    { id:'p1', category:'politica',
+      title:'Salud pública: ¿sistema universal o mercado privado?',
+      context:'Un país debate reformar su sistema de salud. Una propuesta busca un sistema público universal financiado con impuestos; otra defiende un mercado de seguros privados con mínima intervención estatal.',
+      options:[
+        { thinker:'rawls', text:'Establecer un sistema de salud universal financiado colectivamente, garantizando acceso igualitario sin importar el ingreso.' },
+        { thinker:'millc', text:'Combinar cobertura básica garantizada por el estado con libertad de elegir seguros adicionales privados.' },
+        { thinker:'nozick', text:'Minimizar la intervención estatal: que el mercado de seguros privados asigne los recursos de salud libremente.' },
+        { thinker:'burke', text:'Reformar con cautela, preservando instituciones de salud existentes y evitando cambios abruptos al sistema actual.' }
+      ],
+      notes:{
+        rawls:'Rawls defendería un sistema que beneficie especialmente a los menos favorecidos, bajo el "velo de la ignorancia" sobre nuestra propia salud futura.',
+        millc:'El liberalismo clásico buscaría equilibrio entre garantías mínimas colectivas y libertad individual de elección.',
+        nozick:'Nozick vería la salud como un bien más en un mercado libre, desconfiando de la redistribución forzosa vía impuestos.',
+        burke:'Burke priorizaría la estabilidad institucional y el cambio gradual sobre reformas radicales de un sistema ya establecido.'
+      }
+    },
+    { id:'p2', category:'politica',
+      title:'Regulación estatal: mandatos de vacunación',
+      context:'Ante un brote infeccioso grave, el gobierno debate si imponer un mandato obligatorio de vacunación en espacios públicos o dejarlo como una recomendación voluntaria.',
+      options:[
+        { thinker:'rawls', text:'Imponer el mandato si protege desproporcionadamente a los más vulnerables de la sociedad frente al contagio.' },
+        { thinker:'millc', text:'Permitir mandatos limitados solo donde exista riesgo directo y grave a terceros, protegiendo la libertad individual en lo demás.' },
+        { thinker:'nozick', text:'Rechazar cualquier mandato: el cuerpo de cada individuo es su propiedad más fundamental, ajena a la coerción estatal.' },
+        { thinker:'burke', text:'Apoyar medidas graduales y consensuadas, evitando imposiciones abruptas que erosionen la confianza en las instituciones.' }
+      ],
+      notes:{
+        rawls:'Rawls evaluaría el mandato según cuánto protege a los grupos más vulnerables frente al riesgo colectivo.',
+        millc:'El principio de daño de Mill justificaría restricciones solo cuando el riesgo a terceros sea claro y significativo.',
+        nozick:'Nozick defendería la soberanía absoluta del individuo sobre su propio cuerpo frente a cualquier mandato estatal.',
+        burke:'Burke preferiría el consenso social gradual sobre la imposición súbita, incluso si el objetivo es legítimo.'
+      }
+    },
+    { id:'p3', category:'politica',
+      title:'Impuestos y redistribución de recursos',
+      context:'Se debate subir impuestos a los ingresos más altos para financiar programas sociales ampliados, incluyendo salud y educación pública gratuita.',
+      options:[
+        { thinker:'rawls', text:'Aumentar los impuestos progresivos: la desigualdad solo se justifica si beneficia a los menos favorecidos de la sociedad.' },
+        { thinker:'millc', text:'Aceptar impuestos moderados que financien un mínimo de bienestar social sin desincentivar la iniciativa individual.' },
+        { thinker:'nozick', text:'Rechazar el aumento: la redistribución forzosa mediante impuestos viola el derecho de propiedad legítimamente adquirida.' },
+        { thinker:'burke', text:'Considerar el cambio con cautela, preservando los incentivos económicos que sostienen las instituciones sociales existentes.' }
+      ],
+      notes:{
+        rawls:'Rawls justificaría la redistribución solo si mejora la posición de los grupos menos favorecidos de la sociedad.',
+        millc:'El liberalismo clásico aceptaría cierta redistribución moderada, cuidando no sofocar la libertad económica individual.',
+        nozick:'Nozick consideraría los impuestos redistributivos una forma de apropiación no consentida del fruto del trabajo individual.',
+        burke:'Burke evaluaría el impacto en las instituciones sociales existentes antes de apoyar cambios fiscales significativos.'
+      }
+    }
+  ];
+
+  // ---------------- State ----------------
+  let activeFilter = 'todas';
+  let currentCase = null;
+  let answered = false;
+  let seen = new Set();          // case ids shown this session
+  const answers = [];             // {caseId, category, thinker}
+
+  const catByKey = Object.fromEntries(CATEGORIES.map(c => [c.key, c]));
+
+  // ---------------- Tabs ----------------
+  function renderTabs(){
+    const tabsEl = document.getElementById('tabs');
+    const countOf = key => CASES.filter(c => key === 'todas' ? true : c.category === key).length;
+    const all = [{ key:'todas', label:'Todas', color:'#8f8a7c' }, ...CATEGORIES];
+    tabsEl.innerHTML = all.map(cat => `
+      <button class="tab ${activeFilter === cat.key ? 'active' : ''}" data-key="${cat.key}" style="--tab-color:${cat.color}">
+        ${cat.label}<span class="count">${countOf(cat.key)}</span>
+      </button>
+    `).join('');
+    tabsEl.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.key;
+        renderTabs();
+        loadNextCase();
+      });
+    });
+  }
+
+  function renderProgress(){
+    const total = CASES.length;
+    document.getElementById('progressLine').textContent =
+      `Expedientes abiertos: ${seen.size} / ${total}`;
+  }
+
+  // ---------------- Case selection ----------------
+  function pool(){
+    return activeFilter === 'todas' ? CASES : CASES.filter(c => c.category === activeFilter);
+  }
+
+  function loadNextCase(){
+    let candidates = pool().filter(c => !seen.has(c.id));
+    let recycled = false;
+    if(candidates.length === 0){
+      candidates = pool();
+      recycled = true;
+    }
+    const next = candidates[Math.floor(Math.random() * candidates.length)];
+    currentCase = next;
+    answered = false;
+    seen.add(next.id);
+    renderCase(recycled);
+    renderProgress();
+  }
+
+  // ---------------- Render case ----------------
+  function renderCase(recycled){
+    const cat = catByKey[currentCase.category];
+    const stage = document.getElementById('stage');
+    const isPolitica = currentCase.category === 'politica';
+
+    stage.innerHTML = `
+      <article class="case-file">
+        <span class="tab-label" style="--cat-color:${cat.color}">${cat.label.toUpperCase()}</span>
+        <h2 class="case-title">${currentCase.title}</h2>
+        ${recycled ? '<p class="case-meta">Ya viste todos los casos de esta selección — aquí tienes uno para repasar.</p>' : ''}
+        <div class="sheet"><p>${currentCase.context}</p></div>
+        <p class="prompt-label">¿Qué harías tú?</p>
+        <div class="options" id="optionsWrap">
+          ${currentCase.options.map((opt, i) => `
+            <button class="option" data-idx="${i}" style="--cat-color:${cat.color}">
+              ${opt.text}
+            </button>
+          `).join('')}
+        </div>
+        <div class="verdict" id="verdict" hidden></div>
+        <div class="case-actions">
+          <button class="link-btn" id="skipBtn" type="button">Saltar este expediente →</button>
+          <button class="btn-primary" id="nextBtn" type="button" hidden>Siguiente expediente →</button>
+        </div>
+      </article>
+    `;
+
+    stage.querySelectorAll('.option').forEach(btn => {
+      btn.addEventListener('click', () => selectOption(parseInt(btn.dataset.idx, 10)));
+    });
+    document.getElementById('skipBtn').addEventListener('click', loadNextCase);
+    document.getElementById('nextBtn').addEventListener('click', loadNextCase);
+  }
+
+  function selectOption(idx){
+    if(answered) return;
+    answered = true;
+    const cat = catByKey[currentCase.category];
+    const isPolitica = currentCase.category === 'politica';
+    const thinkerSet = isPolitica ? POL_THINKERS : BIO_THINKERS;
+    const chosen = currentCase.options[idx];
+    const chosenThinker = thinkerSet[chosen.thinker];
+
+    answers.push({ caseId: currentCase.id, category: currentCase.category, thinker: chosen.thinker });
+
+    // mark chosen option, disable all
+    document.querySelectorAll('#optionsWrap .option').forEach((btn, i) => {
+      btn.disabled = true;
+      if(i === idx) btn.classList.add('chosen');
+    });
+
+    const thinkerKeys = Object.keys(thinkerSet);
+    const cardsHtml = thinkerKeys.map(k => {
+      const t = thinkerSet[k];
+      const note = currentCase.notes[k];
+      const isMatch = k === chosen.thinker;
+      return `
+        <div class="thinker-card ${isMatch ? 'match' : ''}" style="--cat-color:${cat.color}">
+          <h4>${t.name} ${isMatch ? '<span class="stamp">tu postura</span>' : ''}</h4>
+          <p>${note}</p>
+        </div>
+      `;
+    }).join('');
+
+    let dialHtml = '';
+    if(isPolitica){
+      const pos = ((chosenThinker.spectrum + 2) / 4) * 100;
+      dialHtml = `
+        <div class="dial-wrap">
+          <p class="dial-caption">Ubicación aproximada de esta postura en el espectro político</p>
+          <div class="dial">
+            <div class="dial-track"></div>
+            <span class="dial-tick" style="left:2%">Izquierda</span>
+            <span class="dial-tick" style="left:47%">Centro</span>
+            <span class="dial-tick" style="left:92%">Derecha</span>
+            <div class="dial-marker" style="left:${pos}%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    const verdict = document.getElementById('verdict');
+    verdict.hidden = false;
+    verdict.innerHTML = `
+      <p class="verdict-lead">Tu postura coincide más con <strong>${chosenThinker.name}</strong> (${chosenThinker.school}).</p>
+      <div class="thinkers-grid">${cardsHtml}</div>
+      ${dialHtml}
+    `;
+    document.getElementById('nextBtn').hidden = false;
+    document.getElementById('skipBtn').hidden = true;
+  }
+
+  // ---------------- Profile ----------------
+  function renderProfile(){
+    const panel = document.getElementById('profilePanel');
+    const bioAnswers = answers.filter(a => a.category !== 'politica');
+    const polAnswers = answers.filter(a => a.category === 'politica');
+
+    const bioCounts = { kant:0, mill:0, aristoteles:0, hipocrates:0 };
+    bioAnswers.forEach(a => bioCounts[a.thinker]++);
+    const bioTotal = bioAnswers.length || 1;
+
+    const polCounts = { rawls:0, millc:0, nozick:0, burke:0 };
+    polAnswers.forEach(a => polCounts[a.thinker]++);
+    let avgSpectrum = 0;
+    if(polAnswers.length){
+      avgSpectrum = polAnswers.reduce((sum, a) => sum + POL_THINKERS[a.thinker].spectrum, 0) / polAnswers.length;
+    }
+    const spectrumLabel = polAnswers.length === 0 ? '—' :
+      avgSpectrum <= -0.8 ? 'Tendencia hacia la izquierda' :
+      avgSpectrum >= 0.8 ? 'Tendencia hacia la derecha' : 'Postura moderada / mixta';
+
+    const barColors = { kant:'#24425B', mill:'#7A2E2E', aristoteles:'#5C6E4F', hipocrates:'#A8783A' };
+
+    panel.innerHTML = `
+      <h2>Tu perfil</h2>
+      <p class="sub">Basado en ${answers.length} de ${CASES.length} expedientes respondidos en esta sesión.</p>
+
+      <div class="profile-block">
+        <h3>Perfil ético (bioética)</h3>
+        ${bioAnswers.length === 0 ? '<p class="empty-note">Aún no respondiste ningún caso de bioética.</p>' :
+          Object.keys(bioCounts).map(k => `
+            <div class="bar-row">
+              <span class="label">${BIO_THINKERS[k].name}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${(bioCounts[k]/bioTotal*100).toFixed(0)}%; background:${barColors[k]}"></div></div>
+              <span class="val">${bioCounts[k]}</span>
+            </div>
+          `).join('')
+        }
+      </div>
+
+      <div class="profile-block">
+        <h3>Perfil político</h3>
+        ${polAnswers.length === 0 ? '<p class="empty-note">Aún no respondiste ningún caso de política.</p>' : `
+          <p class="dial-caption" style="margin-bottom:14px;">${spectrumLabel}</p>
+          <div class="dial">
+            <div class="dial-track"></div>
+            <span class="dial-tick" style="left:2%">Izquierda</span>
+            <span class="dial-tick" style="left:47%">Centro</span>
+            <span class="dial-tick" style="left:92%">Derecha</span>
+            <div class="dial-marker" style="left:${((avgSpectrum+2)/4*100).toFixed(1)}%"></div>
+          </div>
+        `}
+      </div>
+
+      <div class="profile-actions">
+        <button class="link-btn" id="resetBtn" type="button">Reiniciar progreso</button>
+        <button class="link-btn" id="closeProfileBtn" type="button">Cerrar</button>
+      </div>
+    `;
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      answers.length = 0;
+      seen.clear();
+      renderProfile();
+      renderProgress();
+    });
+    document.getElementById('closeProfileBtn').addEventListener('click', () => {
+      panel.hidden = true;
+    });
+  }
+
+  document.getElementById('profileBtn').addEventListener('click', () => {
+    const panel = document.getElementById('profilePanel');
+    panel.hidden = !panel.hidden;
+    if(!panel.hidden) renderProfile();
+  });
+
+  // ---------------- Init ----------------
+  renderTabs();
+  loadNextCase();
+
+})();
+</script>
+</body>
+</html>
